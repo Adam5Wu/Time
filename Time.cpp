@@ -146,7 +146,7 @@ int year(time_t t) { // the year for the given time
 // leap year calulator expects year argument as years offset from 1970
 #define LEAP_YEAR(Y)     ( ((1970+(Y))>0) && !((1970+(Y))%4) && ( ((1970+(Y))%100) || !((1970+(Y))%400) ) )
 
-static  const uint8_t monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31}; // API starts months from 1, this array starts from 0
+static const uint8_t monthDays[]={31,28,31,30,31,30,31,31,30,31,30,31}; // month starts from 0
 
 void breakTime(time_t timeInput, tmElements_t &tm){
 // break the given time_t into time components
@@ -197,7 +197,7 @@ void breakTime(time_t timeInput, tmElements_t &tm){
         break;
     }
   }
-  tm.Month = month + 1;  // jan is month 1
+  tm.Month = month;  // jan is month 0
   tm.Day = time + 1;     // day of month
 }
 
@@ -217,12 +217,12 @@ time_t makeTime(const tmElements_t &tm){
     }
   }
 
-  // add days for this year, months start from 1
-  for (i = 1; i < tm.Month; i++) {
-    if ( (i == 2) && LEAP_YEAR(tm.Year)) {
+  // add days for this year, months start from 0
+  for (i = 0; i < tm.Month; i++) {
+    if ( (i == 1) && LEAP_YEAR(tm.Year)) {
       seconds += SECS_PER_DAY * 29;
     } else {
-      seconds += SECS_PER_DAY * monthDays[i-1];  //monthDay array starts from 0
+      seconds += SECS_PER_DAY * monthDays[i];  //monthDay array starts from 0
     }
   }
   seconds+= (tm.Day-1) * SECS_PER_DAY;
